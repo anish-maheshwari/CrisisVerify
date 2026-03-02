@@ -23,10 +23,15 @@ services:
   frontend:
     build:
       context: ./frontend
+      args:
+        # Passed at BUILD time so Next.js can embed it in the JS bundle.
+        # Empty string = relative /api/* URLs → Apache proxies to backend.
+        # Local dev: set NEXT_PUBLIC_API_URL=http://localhost:8000 in shell.
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8000}
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8000}
     depends_on:
       backend:
         condition: service_healthy

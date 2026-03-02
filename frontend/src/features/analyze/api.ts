@@ -1,6 +1,9 @@
 import { AnalyzeRequest, AnalysisResult, ApiError } from "@/types/analysis";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+// Empty string = relative URL → browser calls /api/v1/analyze on same host.
+// Apache on EC2 proxies /api/* → backend:8000.
+// For local dev: set NEXT_PUBLIC_API_URL=http://localhost:8000 in docker-compose.
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 export async function analyzeText(request: AnalyzeRequest): Promise<AnalysisResult> {
     const response = await fetch(`${API_BASE_URL}/api/v1/analyze`, {
